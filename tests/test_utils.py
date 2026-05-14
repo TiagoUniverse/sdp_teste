@@ -61,7 +61,6 @@ def test_silver_schema():
         ]
     )
 
-    
     data = [
         (
             "1", "John Doe", "john.doe@example.com", "1990-01-01",
