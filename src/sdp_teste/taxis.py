@@ -2,6 +2,6 @@
 from pyspark.sql import DataFrame
 
 
-def find_all_taxis() -> DataFrame:
+def find_all_taxis(spark) -> DataFrame:
     """Find all taxi data."""
     return spark.read.table("samples.nyctaxi.trips")
