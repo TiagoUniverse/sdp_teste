@@ -1,8 +1,18 @@
-from databricks.sdk.runtime import spark
-from pyspark.sql import DataFrame
+import pytest
+from pyspark.sql import SparkSession
 from utils.utils import transform_bronze, transform_silver
 from pyspark.testing import assertSchemaEqual
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType
+from datetime import datetime
+
+
+
+@pytest.fixture(scope="session")
+def spark():
+    return SparkSession.builder \
+        .master("local[*]") \
+        .appName("tests") \
+        .getOrCreate()
 
 
 
@@ -21,7 +31,7 @@ def test_transform_bronze():
     assert "created_ts_bronze" in transformed_df.columns
 
 
-def test_tranform_silver():
+def test_transform_silver():
     df = spark.createDataFrame(
         [
             (1, "John Doe", 30, "2024-01-01"),
@@ -51,12 +61,22 @@ def test_silver_schema():
         ]
     )
 
+    
     data = [
-        ("1", "John Doe", "john.doe@example.com", "1990-01-01", "2024-01-01", "2024-01-01", "2024-01-01", "2024-01-01 00:00:00"),
-        ("2", "Jane Smith", "jane.smith@example.com", "1985-05-15", "2024-01-02", "2024-01-02", "2024-01-02", "2024-01-02 00:00:00")
+        (
+            "1", "John Doe", "john.doe@example.com", "1990-01-01",
+            "2024-01-01", "2024-01-01", "2024-01-01",
+            datetime(2024, 1, 1, 0, 0, 0)
+        ),
+        (
+            "2", "Jane Smith", "jane.smith@example.com", "1985-05-15",
+            "2024-01-02", "2024-01-02", "2024-01-02",
+            datetime(2024, 1, 2, 0, 0, 0)
+        )
     ]
 
-    df =spark.createDataframe(data, schema_bronze)
+
+    df = spark.createDataFrame(data, schema_bronze)
 
     transformed_df = transform_silver(df)
 
