@@ -25,6 +25,10 @@ jobs:
           echo "PYSPARK_PYTHON=python" >> $GITHUB_ENV
 
 
+      - name: Adicionar project ao PYTHONPATH
+        run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
+
+
       - name: Instalar dependências
         run: |
           pip install -r requirements.txt
