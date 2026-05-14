@@ -1,6 +1,6 @@
 import pytest
 from pyspark.sql import SparkSession
-from utils.utils import transform_bronze, transform_silver
+from utils.utils import transform_bronze, transform_silver #tambem pode colocar como src.utils.utils e retirar do pwd/src do workflow_ci.yaml
 from pyspark.testing import assertSchemaEqual
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType
 from datetime import datetime
