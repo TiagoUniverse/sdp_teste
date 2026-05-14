@@ -7,16 +7,7 @@ from datetime import datetime
 
 
 
-@pytest.fixture(scope="session")
-def spark():
-    return SparkSession.builder \
-        .master("local[*]") \
-        .appName("tests") \
-        .getOrCreate()
-
-
-
-def test_transform_bronze():
+def test_transform_bronze(spark):
     df = spark.createDataFrame(
         [
             (1, "John Doe", 30),
@@ -31,7 +22,7 @@ def test_transform_bronze():
     assert "created_ts_bronze" in transformed_df.columns
 
 
-def test_transform_silver():
+def test_transform_silver(spark):
     df = spark.createDataFrame(
         [
             (1, "John Doe", 30, "2024-01-01"),
@@ -46,7 +37,7 @@ def test_transform_silver():
     assert "created_ts_silver" in transformed_df.columns
 
 
-def test_silver_schema():
+def test_silver_schema(spark):
 
     schema_bronze = StructType(
         [
