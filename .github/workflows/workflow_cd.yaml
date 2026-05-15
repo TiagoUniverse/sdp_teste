@@ -1,14 +1,12 @@
 name: Workflow CD
 
 on:
-  pull_request_target:
-    types:
-      - closed
+  push:
+    branches: [ "main", "develop" ]
 
 jobs:
    # Se a PR fechada for para a master
   deploy_prod:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
