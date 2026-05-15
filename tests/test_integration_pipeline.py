@@ -162,9 +162,15 @@ def test_integration_pipeline_performance(spark):
     # Processar através do pipeline
     df_bronze = transform_bronze(df_raw)
     df_silver = transform_silver(df_bronze)
+
+    expected_columns = [
+    "customer_id", "name", "email", "birth_date",
+    "created_at", "updated_at",
+    "created_silver", "created_ts_silver"
+    ]
     
     # Validações
     assert df_silver.count() == 1000, "Todos os registros devem ser processados"
-    assert df_silver.columns == df_bronze.columns + ["created_silver", "created_ts_silver"],         "Schema deve ter as colunas corretas"
-    
+    assert df_silver.columns == expected_columns, "Schema deve ter as colunas corretas"
+
     print(f"✅ Pipeline processou {df_silver.count()} registros com sucesso!")
