@@ -1,0 +1,37 @@
+name: Workflow CD
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+   # Se a PR fechada for para a master
+  deploy_prod:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        
+        
+      - name: Instalar Databricks CLI (versão standalone)
+        shell: bash
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+
+      - name: Configurar Databricks CLI
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          databricks configure --token <<EOF
+          $DATABRICKS_HOST
+          $DATABRICKS_TOKEN
+          EOF
+      
+      # Comando Deploy necessita de UV
+      - name: Deploy bundle to production environment
+        run: |
+          databricks bundle deploy --target prod
