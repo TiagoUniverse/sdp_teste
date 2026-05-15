@@ -12,6 +12,8 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
         
+      - name: Instalar UV
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
         
       - name: Instalar Databricks CLI (versão standalone)
         shell: bash
